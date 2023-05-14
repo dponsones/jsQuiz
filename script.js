@@ -31,13 +31,21 @@ const questions = [
 const questionElement = document.getElementById("question");
 const answerButtons = document.getElementById("answer-buttons");
 const nextButton = document.getElementById("next-btn");
+const timerElement = document.getElementById("timer");
+const initialsInput = document.getElementById("initials");
+const saveButton = document.getElementById("save-btn");
+const highScoresList = document.getElementById("high-scores-list");
 
 let currentQuestionIndex = 0;
 let score = 0;
+let timeLeft = 60;
+let timerIntervalId;
 
 function startQuiz () {
   currentQuestionIndex = 0;
   score = 0;
+  timeLeft = 60;
+  timerIntervalId = setInterval(updateTimer, 1000);
   nextButton.innerHTML = "Next";
   showQuestion();
 }
@@ -75,6 +83,7 @@ function selectAnswer(e) {
     score++; 
   }else{
     selectedBtn.classList.add("incorrect");
+    timeLeft -= 10; // subtract 10 seconds for incorrect answer
   }
   Array.from(answerButtons.children).forEach(button => {
     if(button.dataset.correct === "true"){
@@ -101,6 +110,39 @@ function handleNextButton(){
   }
 }
 
+
+function updateTimer() {
+  timeLeft--;
+  timerElement.innerHTML = `Time left: ${timeLeft}s`;
+  if (timeLeft <= 0) {
+    clearInterval(timerIntervalId);
+    showScore();
+  }
+}
+
+function saveScore() {
+  const initials = initialsInput.value;
+  if (initials !== "") {
+    const highScore = { initials, score };
+    let highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+    highScores.push(highScore);
+    highScores.sort((a, b) => b.score - a.score);
+    highScores = highScores.slice(0, 5); // keep only top 5 scores
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+    showHighScores();
+  }
+}
+
+function showHighScores() {
+  let highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+  highScoresList.innerHTML = "";
+  highScores.forEach(highScore => {
+    const li = document.createElement("li");
+    li.innerHTML = `${highScore.initials}: ${highScore.score}`;
+    highScoresList.appendChild(li);
+  });
+  quizContainer.innerHTML = "";
+}
 nextButton.addEventListener("click", ()=>{
   if(currentQuestionIndex < questions.length){
     handleNextButton();
