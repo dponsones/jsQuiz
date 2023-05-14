@@ -4,31 +4,19 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz App</title>
-  <link rel="stylesheet" href="./style.css">
+  <title>JavaScript HomePage</title>
+ <link rel="stylesheet" href="./homepage.css">
 </head>
-
-<header>
-  <div>
-    <p id="highscores">View highscores</p>
-  </div>
-  <div id="timer">Time: <span id="time"></span></div>
-</header>
-
 <body>
-  <div class="app">
-    <h1>Simple Quiz</h1>
-    <div class="quiz">
-      <h2 id="question">Question goes here</h2>
-      <div id="answer-buttons">
-        <button class="btn">Answer 1</button>
-        <button class="btn">Answer 2</button>
-        <button class="btn">Answer 3</button>
-        <button class="btn">Answer 4</button>
-      </div>
-      <button id="next-btn">Next</button>
-    </div>
+  <div class="container">
+    <button id="home-btn">BEGIN HERE</button>
   </div>
-  <script src="script.js"></script>
+
+  <script>
+    const homeButton = document.getElementById('home-btn');
+    homeButton.addEventListener('click', () => {
+      window.location.href = 'game.html'
+    });
+  </script>
 </body>
 </html>
