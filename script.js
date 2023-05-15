@@ -35,6 +35,10 @@ const timerElement = document.getElementById("timer");
 const initialsInput = document.getElementById("initials");
 const saveButton = document.getElementById("save-btn");
 const highScoresList = document.getElementById("high-scores-list");
+const scoreForm = document.getElementById("score-form");
+const scoreText = document.getElementById("score-text");
+const scoresList = document.getElementById("scores-list");
+const highScoresBtn = document.getElementById("highscores-btn");
 
 let currentQuestionIndex = 0;
 let score = 0;
@@ -94,11 +98,15 @@ function selectAnswer(e) {
   nextButton.style.display = "block";
 }
 
-function showScore(){
+function showScore() {
   resetState();
-  questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
-  nextButton.innerHTML = "Play Again";
-  nextButton.style.display= "block";
+  clearInterval(timerIntervalId);
+  questionElement.style.display = "none";
+  answerButtons.style.display = "none";
+  nextButton.style.display = "none";
+  scoreText.innerHTML = `You scored ${score} out of ${questions.length}!`;
+  initialsInput.value = "";
+  scoreForm.style.display = "block";
 }
 
 function handleNextButton(){
@@ -134,22 +142,27 @@ function saveScore() {
 }
 
 function showHighScores() {
+  clearInterval(timerIntervalId);
+  scoreForm.style.display = "none";
+  highScoresList.style.display = "block";
   let highScores = JSON.parse(localStorage.getItem("highScores")) || [];
-  highScoresList.innerHTML = "";
+  scoresList.innerHTML = "";
   highScores.forEach(highScore => {
     const li = document.createElement("li");
     li.innerHTML = `${highScore.initials}: ${highScore.score}`;
-    highScoresList.appendChild(li);
+    scoresList.appendChild(li);
   });
-  quizContainer.innerHTML = "";
 }
-nextButton.addEventListener("click", ()=>{
-  if(currentQuestionIndex < questions.length){
+
+highScoresBtn.addEventListener("click", showHighScores);
+nextButton.addEventListener("click", () => {
+  if (currentQuestionIndex < questions.length) {
     handleNextButton();
-  }else{
-    startQuiz();
+  } else {
+    showScore();
   }
-})
+});
+saveButton.addEventListener("click", saveScore);
 
 
 startQuiz();
